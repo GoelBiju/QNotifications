@@ -89,3 +89,6 @@ ENV/
 
 # Repository build and upload
 build_all
+
+# Don't send idea folders.
+.idea

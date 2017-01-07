@@ -112,6 +112,8 @@ class QNotification(QtWidgets.QWidget):
         # process of being removed.
         self.isBeingRemoved = False
 
+        print('QNotification class x={0}, y={1}'.format(self.x(), self.y()))
+
         self.__init_graphic_effects()
 
     def __init_graphic_effects(self):
