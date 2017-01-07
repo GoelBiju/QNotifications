@@ -22,25 +22,27 @@ from setuptools import setup, find_packages
 import QNotifications
 
 setup(
-	name='python-qnotifications',
-	version=QNotifications.__version__,
-	description='Pretty in-app notifications for PyQt',
-	author='Daniel Schreij',
-	author_email='dschreij@gmail.com',
-	url='https://github.com/dschreij/QNotifications',
-	packages=find_packages('.'),
-	install_requires=[
-		'qtpy',
-	],
-	classifiers=[
-		'Intended Audience :: Developers',
-		'Topic :: Desktop Environment',
-		'Topic :: Communications :: Email',
-		'Operating System :: MacOS :: MacOS X',
-		'Operating System :: Microsoft :: Windows',
-		'Operating System :: POSIX',
-		'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
-		'Programming Language :: Python :: 2',
-		'Programming Language :: Python :: 3',
-	],
+    name='python-qnotifications',
+    version=QNotifications.__version__,
+    description='Pretty in-app notifications for PyQt.',
+    author='Daniel Schreij',
+    author_email='dschreij@gmail.com',
+    url='https://github.com/dschreij/QNotifications',
+    packages=find_packages('.'),
+    install_requires=[
+        'qtpy',
+    ],
+
+    classifiers=[
+        'Intended Audience :: Developers',
+        'Topic :: Desktop Environment',
+        'Topic :: Communications :: Email',
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: Microsoft :: Windows',
+        'Operating System :: POSIX',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
+    ],
 )
+

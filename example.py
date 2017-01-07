@@ -23,165 +23,177 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import sys
 from qtpy import QtWidgets, QtCore
 import QNotifications
 
 __author__ = u"Daniel Schreij"
 __license__ = u"GPLv3"
 
-import sys
 
 class Example(QtCore.QObject):
-	""" Example showing off the notifications """
-	notify = QtCore.Signal(['QString', 'QString', int],
-		['QString', 'QString', int, 'QString'])
+    """
+    Example showing off the notifications.
 
-	def __init__(self):
-		super(Example,self).__init__()
-		self.display_widget = self.__setup_widget()
-		self.notification_area = self.__setup_notification_area(self.display_widget)
-		self.display_widget.show()
+    :inherits: QtCore.QObject
+    """
+    notify = QtCore.Signal(['QString', 'QString', int], ['QString', 'QString', int, 'QString'])
 
-	def __setup_widget(self):
-		display_widget = QtWidgets.QWidget()
-		display_widget.setGeometry(100,100,800,600)
-		display_widget.setLayout(QtWidgets.QVBoxLayout())
+    def __init__(self):
+        super(Example, self).__init__()
+        self.display_widget = self.__setup_widget()
+        self.notification_area = self.__setup_notification_area(self.display_widget)
+        self.display_widget.show()
 
-		inputLayout = QtWidgets.QFormLayout()
-		inputLayout.setFieldGrowthPolicy(inputLayout.ExpandingFieldsGrow)
+    def __setup_widget(self):
+        display_widget = QtWidgets.QWidget()
+        display_widget.setGeometry(300, 100, 800, 500)
+        display_widget.setLayout(QtWidgets.QVBoxLayout())
 
-		# Notification message
-		message_label = QtWidgets.QLabel("Send notification: ", display_widget)
-		self.message_textbox = QtWidgets.QLineEdit(display_widget)
-		# Notification type
-		type_label = QtWidgets.QLabel("Notification type: ", display_widget)
-		self.type_dropdown = QtWidgets.QComboBox(display_widget)
-		self.type_dropdown.addItems(["primary", "success", "info", "warning", "danger"])
+        inputLayout = QtWidgets.QFormLayout()
+        inputLayout.setFieldGrowthPolicy(inputLayout.ExpandingFieldsGrow)
 
-		# Notification duration
-		duration_label = QtWidgets.QLabel("Display duration: (ms)", display_widget)
-		self.message_duration = QtWidgets.QSpinBox(display_widget)
-		self.message_duration.setRange(500, 5000)
-		self.message_duration.setValue(5000)
-		self.message_duration.setSingleStep(50)
-		# Entry effect
-		entryeffect_label = QtWidgets.QLabel("Entry effect: ", display_widget)
-		self.entry_dropdown = QtWidgets.QComboBox(display_widget)
-		self.entry_dropdown.addItems(["None","fadeIn"])
-		try:
-			self.entry_dropdown.currentTextChanged.connect(self.__process_combo_change)
-		except AttributeError:
-			self.entry_dropdown.editTextChanged.connect(self.__process_combo_change)
-		# Entry effect duration
-		self.entryduration_label = QtWidgets.QLabel("Effect duration: (ms)", display_widget)
-		self.entryduration = QtWidgets.QSpinBox(display_widget)
-		self.entryduration.setRange(100, 1000)
-		self.entryduration.setSingleStep(50)
-		# Exit effect
-		exiteffect_label = QtWidgets.QLabel("Exit effect: ", display_widget)
-		self.exit_dropdown = QtWidgets.QComboBox(display_widget)
-		self.exit_dropdown.addItems(["None","fadeOut"])
-		# Qt5
-		try:
-			self.exit_dropdown.currentTextChanged.connect(self.__process_combo_change)
-		except AttributeError:
-			self.exit_dropdown.editTextChanged.connect(self.__process_combo_change)
-		# Exit effect duration
-		self.exitduration_label = QtWidgets.QLabel("Effect duration: (ms)", display_widget)
-		self.exitduration = QtWidgets.QSpinBox(display_widget)
-		self.exitduration.setRange(100, 1000)
-		self.exitduration.setSingleStep(50)
+        # Notification message.
+        message_label = QtWidgets.QLabel("Send notification: ", display_widget)
+        self.message_textbox = QtWidgets.QLineEdit(display_widget)
+        # Notification type
+        type_label = QtWidgets.QLabel("Notification type: ", display_widget)
+        self.type_dropdown = QtWidgets.QComboBox(display_widget)
+        self.type_dropdown.addItems(["primary", "success", "info", "warning", "danger"])
 
-		self.buttontext_label = QtWidgets.QLabel("Button text", display_widget)
-		self.buttontext_textbox = QtWidgets.QLineEdit(display_widget)
+        # Notification duration.
+        duration_label = QtWidgets.QLabel("Display duration: (ms)", display_widget)
+        self.message_duration = QtWidgets.QSpinBox(display_widget)
+        self.message_duration.setRange(500, 5000)
+        self.message_duration.setValue(5000)
+        self.message_duration.setSingleStep(50)
 
-		# Send button
-		send_button = QtWidgets.QPushButton("Send", display_widget)
+        # Entry effect
+        entryeffect_label = QtWidgets.QLabel("Entry effect: ", display_widget)
+        self.entry_dropdown = QtWidgets.QComboBox(display_widget)
+        self.entry_dropdown.addItems(["None", "fadeIn"])
+        try:
+            self.entry_dropdown.currentTextChanged.connect(self.__process_combo_change)
+        except AttributeError:
+            self.entry_dropdown.editTextChanged.connect(self.__process_combo_change)
 
-		inputLayout.addRow(message_label, self.message_textbox)
-		inputLayout.addRow(type_label, self.type_dropdown)
-		inputLayout.addRow(duration_label, self.message_duration)
-		inputLayout.addRow(entryeffect_label, self.entry_dropdown)
-		inputLayout.addRow(self.entryduration_label, self.entryduration)
-		inputLayout.addRow(exiteffect_label, self.exit_dropdown)
-		inputLayout.addRow(self.exitduration_label, self.exitduration)
-		inputLayout.addRow(self.buttontext_label, self.buttontext_textbox)
-		inputLayout.addRow(QtWidgets.QWidget(), send_button)
+        # Entry effect duration
+        self.entryduration_label = QtWidgets.QLabel("Effect duration: (ms)", display_widget)
+        self.entryduration = QtWidgets.QSpinBox(display_widget)
+        self.entryduration.setRange(100, 1000)
+        self.entryduration.setSingleStep(50)
 
-		self.entryduration_label.setDisabled(True)
-		self.entryduration.setDisabled(True)
-		self.exitduration_label.setDisabled(True)
-		self.exitduration.setDisabled(True)
+        # Exit effect
+        exiteffect_label = QtWidgets.QLabel("Exit effect: ", display_widget)
+        self.exit_dropdown = QtWidgets.QComboBox(display_widget)
+        self.exit_dropdown.addItems(["None", "fadeOut"])
 
-		display_widget.layout().addWidget(QtWidgets.QLabel("<h1>Example</h2>",
-			display_widget))
-		display_widget.layout().addLayout(inputLayout)
+        # Qt5
+        try:
+            self.exit_dropdown.currentTextChanged.connect(self.__process_combo_change)
+        except AttributeError:
+            self.exit_dropdown.editTextChanged.connect(self.__process_combo_change)
 
-		self.message_textbox.returnPressed.connect(send_button.click)
-		self.buttontext_textbox.returnPressed.connect(send_button.click)
-		send_button.clicked.connect(self.__submit_message)
-		return display_widget
+        # Exit effect duration
+        self.exitduration_label = QtWidgets.QLabel("Effect duration: (ms)", display_widget)
+        self.exitduration = QtWidgets.QSpinBox(display_widget)
+        self.exitduration.setRange(100, 1000)
+        self.exitduration.setSingleStep(50)
 
-	def __setup_notification_area(self, targetWidget):
-		notification_area = QNotifications.QNotificationArea(targetWidget)
-		self.notify['QString', 'QString', int].connect(notification_area.display)
-		self.notify['QString', 'QString', int, 'QString'].connect(
-			notification_area.display)
-		return notification_area
+        self.buttontext_label = QtWidgets.QLabel("Button text", display_widget)
+        self.buttontext_textbox = QtWidgets.QLineEdit(display_widget)
 
-	def __process_combo_change(self, val):
-		if self.sender() == self.entry_dropdown:
-			if val == "None":
-				self.entryduration_label.setDisabled(True)
-				self.entryduration.setDisabled(True)
-			else:
-				self.entryduration_label.setDisabled(False)
-				self.entryduration.setDisabled(False)
-		elif self.sender() == self.exit_dropdown:
-			if val == "None":
-				self.exitduration_label.setDisabled(True)
-				self.exitduration.setDisabled(True)
-			else:
-				self.exitduration_label.setDisabled(False)
-				self.exitduration.setDisabled(False)
+        # Send button.
+        send_button = QtWidgets.QPushButton("Send", display_widget)
 
-	def __submit_message(self):
-		textvalue = self.message_textbox.text().strip()
-		typevalue = self.type_dropdown.currentText()
-		if textvalue:
-			duration = self.message_duration.value()
-			entry_effect = self.entry_dropdown.currentText()
-			exit_effect = self.exit_dropdown.currentText()
-			if entry_effect != "None":
-				self.notification_area.setEntryEffect(entry_effect,
-					self.entryduration.value())
-			else:
-				self.notification_area.setEntryEffect(None)
-			if exit_effect != "None":
-				self.notification_area.setExitEffect(exit_effect,
-					self.exitduration.value())
-			else:
-				self.notification_area.setExitEffect(None)
+        inputLayout.addRow(message_label, self.message_textbox)
+        inputLayout.addRow(type_label, self.type_dropdown)
+        inputLayout.addRow(duration_label, self.message_duration)
+        inputLayout.addRow(entryeffect_label, self.entry_dropdown)
+        inputLayout.addRow(self.entryduration_label, self.entryduration)
+        inputLayout.addRow(exiteffect_label, self.exit_dropdown)
+        inputLayout.addRow(self.exitduration_label, self.exitduration)
+        inputLayout.addRow(self.buttontext_label, self.buttontext_textbox)
+        inputLayout.addRow(QtWidgets.QWidget(), send_button)
 
-			buttontext = self.buttontext_textbox.text().strip()
-			if buttontext:
-				self.notify['QString', 'QString', int, 'QString'].emit(
-					textvalue, typevalue, duration, buttontext)
-			else:
-				self.notify.emit(textvalue, typevalue, duration)
+        self.entryduration_label.setDisabled(True)
+        self.entryduration.setDisabled(True)
+        self.exitduration_label.setDisabled(True)
+        self.exitduration.setDisabled(True)
+
+        display_widget.layout().addWidget(QtWidgets.QLabel("<h1>QNotifications Example</h2>", display_widget))
+        display_widget.layout().addLayout(inputLayout)
+
+        self.message_textbox.returnPressed.connect(send_button.click)
+        self.buttontext_textbox.returnPressed.connect(send_button.click)
+        send_button.clicked.connect(self.__submit_message)
+
+        return display_widget
+
+    def __setup_notification_area(self, target_widget):
+        notification_area = QNotifications.QNotificationArea(target_widget)
+
+        self.notify['QString', 'QString', int].connect(notification_area.display)
+        self.notify['QString', 'QString', int, 'QString'].connect(notification_area.display)
+
+        return notification_area
+
+    def __process_combo_change(self, val):
+        if self.sender() == self.entry_dropdown:
+            if val == "None":
+                self.entryduration_label.setDisabled(True)
+                self.entryduration.setDisabled(True)
+            else:
+                self.entryduration_label.setDisabled(False)
+                self.entryduration.setDisabled(False)
+
+        elif self.sender() == self.exit_dropdown:
+            if val == "None":
+                self.exitduration_label.setDisabled(True)
+                self.exitduration.setDisabled(True)
+            else:
+                self.exitduration_label.setDisabled(False)
+                self.exitduration.setDisabled(False)
+
+    def __submit_message(self):
+        text_value = self.message_textbox.text().strip()
+        type_value = self.type_dropdown.currentText()
+
+        if text_value:
+            duration = self.message_duration.value()
+            entry_effect = self.entry_dropdown.currentText()
+            exit_effect = self.exit_dropdown.currentText()
+
+            if entry_effect != "None":
+                self.notification_area.setEntryEffect(entry_effect, self.entryduration.value())
+            else:
+                self.notification_area.setEntryEffect(None)
+
+            if exit_effect != "None":
+                self.notification_area.setExitEffect(exit_effect, self.exitduration.value())
+            else:
+                self.notification_area.setExitEffect(None)
+
+            button_text = self.buttontext_textbox.text().strip()
+            if button_text:
+                self.notify['QString', 'QString', int, 'QString'].emit(text_value, type_value, duration, button_text)
+            else:
+                self.notify.emit(text_value, type_value, duration)
 
 if __name__ == "__main__":
-	app = QtWidgets.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
 
-	print(QtCore.PYQT_VERSION_STR)
+    print('QNotifications Example.')
+    print('PyQt Version:', QtCore.PYQT_VERSION_STR)
 
-	# Enable High DPI display with PyQt5
-	if hasattr(QtCore.Qt, 'AA_UseHighDpiPixmaps'):
-		app.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps)
+    # Enable High DPI display with PyQt5.
+    if hasattr(QtCore.Qt, 'AA_UseHighDpiPixmaps'):
+        app.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps)
 
-	example = Example()
+    example = Example()
 
-	exitcode = app.exec_()
-	print("App exiting with code {}".format(exitcode))
-	del(example)
-	sys.exit(exitcode)
+    exitcode = app.exec_()
+    print("App exiting with code {}".format(exitcode))
+    del(example)
+    sys.exit(exitcode)
+
