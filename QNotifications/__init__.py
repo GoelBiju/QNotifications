@@ -21,5 +21,10 @@ __version__ = "1.1.1"
 __author__ = "Daniel Schreij (dschreij@gmail.com)"
 
 # Do some base imports
+# from PyQt4 import QtCore
 from QNotifications.QNotificationArea import QNotificationArea
 from QNotifications.QNotification import QNotification
+
+# QtCore.Signal = QtCore.pyqtSignal
+# QtCore.Slot = QtCore.pyqtSlot
+

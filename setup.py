@@ -30,7 +30,8 @@ setup(
     url='https://github.com/dschreij/QNotifications',
     packages=find_packages('.'),
     install_requires=[
-        'qtpy',
+        # 'qtpy',
+        'pyqt4',
     ],
 
     classifiers=[

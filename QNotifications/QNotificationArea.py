@@ -7,7 +7,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import sys
-from qtpy import QtWidgets, QtCore, QtGui
+# from qtpy import QtWidgets, QtCore, QtGui
+from PyQt4 import QtCore, QtGui
 from QNotifications.QNotification import QNotification
 from QNotifications.abstractions import *
 
@@ -24,7 +25,7 @@ __author__ = u"Daniel Schreij"
 __license__ = u"GPLv3"
 
 
-class QNotificationArea(QtWidgets.QWidget):
+class QNotificationArea(QtGui.QWidget):  # QtWidgets.QWidget
     """
     Notification area to show notifications in. Will be projected on top of
     another QWidget which should be passed as an argument to this class.
@@ -93,7 +94,7 @@ class QNotificationArea(QtWidgets.QWidget):
 
         :raises: TypeError if targetWidget is not an object that inherits QWidget.
         """
-        if not isinstance(target_widget, QtWidgets.QWidget):
+        if not isinstance(target_widget, QtGui.QWidget):  # QtWidgets.QWidget
             raise TypeError('targetWidget is not a QWidget (or child of it')
 
         # Get some variables from kwargs.
@@ -113,7 +114,7 @@ class QNotificationArea(QtWidgets.QWidget):
         self.targetWidget = target_widget
         self.setContentsMargins(0, 0, 0, 0)
 
-        notification_area_layout = QtWidgets.QVBoxLayout()
+        notification_area_layout = QtGui.QVBoxLayout()  # QtWidgets.QVBoxLayout()
         self.setLayout(notification_area_layout)
 
         # Init effects to None
@@ -121,6 +122,10 @@ class QNotificationArea(QtWidgets.QWidget):
         self.entryEffectDuration = None
         self.exitEffect = None
         self.exitEffectDuration = None
+
+        # Notifications area geometry animation.
+        self.slideAnimation = QtCore.QPropertyAnimation(self, safe_encode("geometry"))
+        self._slide_right_limit = None
 
         # Store original target classes resizeEvent to be called in our own function.
         self.target_resize_event = target_widget.resizeEvent
@@ -196,8 +201,10 @@ class QNotificationArea(QtWidgets.QWidget):
         self.exitEffectDuration = duration
 
     # Events:
-    @QtCore.Slot('QString', 'QString', int)
-    @QtCore.Slot('QString', 'QString', int, 'QString')
+    # @QtCore.Slot('QString', 'QString', int)
+    # @QtCore.Slot('QString', 'QString', int, 'QString')
+    @QtCore.pyqtSlot('QString', 'QString', int)
+    @QtCore.pyqtSlot('QString', 'QString', int, 'QString')
     def display(self, message, category, timeout=5000, button_text=None):
         """ Displays a notification.
 
@@ -247,7 +254,18 @@ class QNotificationArea(QtWidgets.QWidget):
         if notification.timeout is not None and notification.timeout > 0:
             QtCore.QTimer.singleShot(notification.timeout, lambda: self.remove(notification))
 
-    @QtCore.Slot()
+    # def slideIn(self, duration):
+    #     """
+    #     Moves the QNotification Area from
+    #
+    #     :param duration:
+    #     :return:
+    #     """
+    #   print(self.x(), self.y())
+    #   self.setGeometry(QtCore.QRect(100, 0, self.width(), self.height()))
+
+    # @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def remove(self, notification=None):
         """ Removes a notification.
 
@@ -302,7 +320,12 @@ class QNotificationArea(QtWidgets.QWidget):
 
         :param pe:
         """
-        o = QtWidgets.QStyleOption()
-        o.initFrom(self)
-        p = QtGui.QPainter(self)
-        self.style().drawPrimitive(QtWidgets.QStyle.PE_Widget, o, p, self)
+        # o = QtWidgets.QStyleOption()
+        option = QtGui.QStyleOption()
+        # o.initFrom(self)
+        # p = QtGui.QPainter(self)
+        painter = QtGui.QPainter(self)
+        option.initFrom(self)
+        # self.style().drawPrimitive(QtWidgets.QStyle.PE_Widget, o, p, self)
+        self.style().drawPrimitive(QtGui.QStyle.PE_Widget, option, painter, self)
+

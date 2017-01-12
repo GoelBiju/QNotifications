@@ -1,3 +1,6 @@
+QNotifications
+--------------
+
 .. image:: https://anaconda.org/cogsci/python-qnotifications/badges/installer/conda.svg
 
 .. image:: https://anaconda.org/cogsci/python-qnotifications/badges/version.svg

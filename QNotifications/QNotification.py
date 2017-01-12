@@ -6,14 +6,15 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-from qtpy import QtWidgets, QtGui, QtCore
+# from qtpy import QtWidgets, QtGui, QtCore
+from PyQt4 import QtGui, QtCore
 from QNotifications.abstractions import *
 
 __author__ = u"Daniel Schreij"
 __license__ = u"GPLv3"
 
 
-class MessageLabel(QtWidgets.QLabel):
+class MessageLabel(QtGui.QLabel):  # QtWidgets.QLabel
     """
     Subclass of QLabel, which re-implements the resizeEvent() function.
     This is necessary because otherwise the notifications take up too much vertical
@@ -31,23 +32,23 @@ class MessageLabel(QtWidgets.QLabel):
         :param event:
         """
         super(MessageLabel, self).resizeEvent(event)
-        if self.wordWrap() and self.sizePolicy().verticalPolicy() == QtWidgets.QSizePolicy.Minimum:
+
+        # QtWidgets.QSizePolicy.Minimum
+        if self.wordWrap() and self.sizePolicy().verticalPolicy() == QtGui.QSizePolicy.Minimum:
             new_height = self.heightForWidth(self.width())
-            # if new_height < 1:
-            #     return
             if new_height >= 1:
                 self.setMaximumHeight(new_height)
 
 
-class QNotification(QtWidgets.QWidget):
+class QNotification(QtGui.QWidget):  # QtWidgets.QWidget
     """
     Class representing a single notification
 
     :inherits: QtWidgets.QWidget
     """
-
     # PyQt signal for click on the notification's close button.
-    closeClicked = QtCore.Signal()
+    # closeClicked = QtCore.Signal()
+    closeClicked = QtCore.pyqtSignal()
 
     def __init__(self, message, category, timeout=None, button_text=None, *args, **kwargs):
         """
@@ -68,30 +69,35 @@ class QNotification(QtWidgets.QWidget):
 
         # Set Object name for reference.
         self.setObjectName(category)
-        self.setLayout(QtWidgets.QHBoxLayout())
+        self.setLayout(QtGui.QHBoxLayout())  # QtWidgets.QHBoxLayout()
         self.setContentsMargins(0, 0, 0, 0)
         # self.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
 
         # Create a message area.
         # contents = QtWidgets.QWidget(self)
-        messageArea = QtWidgets.QHBoxLayout()
+        # messageArea = QtWidgets.QHBoxLayout()
+        messageArea = QtGui.QHBoxLayout()
         messageArea.setContentsMargins(0, 0, 0, 0)
 
         # Create the layout
         self.message_display = MessageLabel()
         self.message_display.setObjectName("message")
-        self.message_display.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        # self.message_display.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        self.message_display.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
         self.message_display.setWordWrap(True)
 
         # Create a button that can close notifications
         # if button_text in (None, u''):
         if button_text is None or button_text == u'':
-            close_button = QtWidgets.QPushButton(u"\u2715")
+            # close_button = QtWidgets.QPushButton(u"\u2715")
+            close_button = QtGui.QPushButton(u"\u2715")
         else:
-            close_button = QtWidgets.QPushButton(button_text)
+            # close_button = QtWidgets.QPushButton(button_text)
+            close_button = QtGui.QPushButton(button_text)
             close_button.setStyleSheet(u'text-decoration: underline;')
 
-        close_button.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        # close_button.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        close_button.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
         close_button.setFlat(True)
         close_button.setObjectName("closeButton")
         close_button.clicked.connect(self.closeClicked)
@@ -112,14 +118,13 @@ class QNotification(QtWidgets.QWidget):
         # process of being removed.
         self.isBeingRemoved = False
 
-        print('QNotification class x={0}, y={1}'.format(self.x(), self.y()))
-
         self.__init_graphic_effects()
 
     def __init_graphic_effects(self):
         """ Initializes graphic effects. """
         # Opacity effect for fade in/out.
-        self.opacityEffect = QtWidgets.QGraphicsOpacityEffect(self)
+        # self.opacityEffect = QtWidgets.QGraphicsOpacityEffect(self)
+        self.opacityEffect = QtGui.QGraphicsOpacityEffect(self)
 
         # Movement animation.
         # self.movementAnimation = QtCore.QPropertyAnimation(self, safe_encode("geometry"))
@@ -181,29 +186,19 @@ class QNotification(QtWidgets.QWidget):
         self.isBeingRemoved = True
         self.fadeOutAnimation.start()
 
-    # def slideIn(self, duration):
-    #     """
-    #
-    #     :param duration:
-    #     :return:
-    #     """
-
-    # def slideOut(self, duration):
-    #     """
-    #
-    #     :param duration:
-    #     :return:
-    #     """
-
     def paintEvent(self, pe):
         """
         Makes class QNotification available in style sheets.
         Redefinition of paintEvent, do not call directly (internal Qt function).
         """
-        o = QtWidgets.QStyleOption()
-        o.initFrom(self)
-        p = QtGui.QPainter(self)
-        self.style().drawPrimitive(QtWidgets.QStyle.PE_Widget, o, p, self)
+        # o = QtWidgets.QStyleOption()
+        option = QtGui.QStyleOption()
+        # o.initFrom(self)
+        # p = QtGui.QPainter(self)
+        option.initFrom(self)
+        painter = QtGui.QPainter(self)
+        # self.style().drawPrimitive(QtWidgets.QStyle.PE_Widget, o, p, self)
+        self.style().drawPrimitive(QtGui.QStyle.PE_Widget, option, painter, self)
 
     # Property attributes:
     @property
