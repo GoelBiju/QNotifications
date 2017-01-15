@@ -254,15 +254,15 @@ class QNotificationArea(QtGui.QWidget):  # QtWidgets.QWidget
         if notification.timeout is not None and notification.timeout > 0:
             QtCore.QTimer.singleShot(notification.timeout, lambda: self.remove(notification))
 
-    # def slideIn(self, duration):
-    #     """
-    #     Moves the QNotification Area from
-    #
-    #     :param duration:
-    #     :return:
-    #     """
-    #   print(self.x(), self.y())
-    #   self.setGeometry(QtCore.QRect(100, 0, self.width(), self.height()))
+    def slideIn(self, duration):
+        """
+        Moves the QNotification Area from
+
+        :param duration:
+        :return:
+        """
+        print(self.x(), self.y())
+        self.setGeometry(QtCore.QRect(100, 0, self.width(), self.height()))
 
     # @QtCore.Slot()
     @QtCore.pyqtSlot()

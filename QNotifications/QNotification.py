@@ -126,9 +126,6 @@ class QNotification(QtGui.QWidget):  # QtWidgets.QWidget
         # self.opacityEffect = QtWidgets.QGraphicsOpacityEffect(self)
         self.opacityEffect = QtGui.QGraphicsOpacityEffect(self)
 
-        # Movement animation.
-        # self.movementAnimation = QtCore.QPropertyAnimation(self, safe_encode("geometry"))
-
         # Fade in animation.
         self.fadeInAnimation = QtCore.QPropertyAnimation(self.opacityEffect, safe_encode("opacity"))
         self.fadeInAnimation.setStartValue(0.0)
