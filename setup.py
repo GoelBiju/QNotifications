@@ -19,6 +19,7 @@ along with QNotifications.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from setuptools import setup, find_packages
+
 import QNotifications
 
 setup(
@@ -29,11 +30,6 @@ setup(
     author_email='dschreij@gmail.com',
     url='https://github.com/dschreij/QNotifications',
     packages=find_packages('.'),
-    install_requires=[
-        # 'qtpy',
-        'pyqt4',
-    ],
-
     classifiers=[
         'Intended Audience :: Developers',
         'Topic :: Desktop Environment',

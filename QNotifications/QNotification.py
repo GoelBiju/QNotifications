@@ -6,8 +6,8 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-# from qtpy import QtWidgets, QtGui, QtCore
 from PyQt4 import QtGui, QtCore
+
 from QNotifications.abstractions import *
 
 __author__ = u"Daniel Schreij"
@@ -79,14 +79,14 @@ class QNotification(QtGui.QWidget):  # QtWidgets.QWidget
         messageArea = QtGui.QHBoxLayout()
         messageArea.setContentsMargins(0, 0, 0, 0)
 
-        # Create the layout
+        # Create the layout.
         self.message_display = MessageLabel()
         self.message_display.setObjectName("message")
         # self.message_display.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         self.message_display.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
         self.message_display.setWordWrap(True)
 
-        # Create a button that can close notifications
+        # Create a button that can close notifications.
         # if button_text in (None, u''):
         if button_text is None or button_text == u'':
             # close_button = QtWidgets.QPushButton(u"\u2715")
@@ -222,7 +222,9 @@ class QNotification(QtGui.QWidget):  # QtWidgets.QWidget
 
         :raises: ValueError if the category is other than one of the expected values.
         """
-        allowed_values = ['primary', 'success', 'info', 'warning', 'danger']
+        allowed_values = ['primary', 'success', 'info', 'warning', 'danger', 'space-grey']
         if value not in allowed_values:
             raise ValueError(u'\"{}\" is not a valid value. Should be one of {}'.format(value, str(allowed_values)))
+
+        # Set that category as the value.
         self._category = value

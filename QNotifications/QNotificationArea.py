@@ -6,9 +6,8 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import sys
-# from qtpy import QtWidgets, QtCore, QtGui
 from PyQt4 import QtCore, QtGui
+
 from QNotifications.QNotification import QNotification
 from QNotifications.abstractions import *
 
@@ -76,6 +75,11 @@ class QNotificationArea(QtGui.QWidget):  # QtWidgets.QWidget
         QNotification#danger {
             background-color: #d9534f;
             border-color: #d43f3a;
+        }
+
+        QNotification#space-grey {
+            background-color: #343d46;
+            border-color: c0c5ce;
         }
     """
 
@@ -254,15 +258,15 @@ class QNotificationArea(QtGui.QWidget):  # QtWidgets.QWidget
         if notification.timeout is not None and notification.timeout > 0:
             QtCore.QTimer.singleShot(notification.timeout, lambda: self.remove(notification))
 
-    def slideIn(self, duration):
-        """
-        Moves the QNotification Area from
-
-        :param duration:
-        :return:
-        """
-        print(self.x(), self.y())
-        self.setGeometry(QtCore.QRect(100, 0, self.width(), self.height()))
+    # def slideIn(self, duration):
+    #     """
+    #     Moves the QNotification Area from
+    #
+    #     :param duration:
+    #     :return:
+    #     """
+    #     print(self.x(), self.y())
+    #     self.setGeometry(QtCore.QRect(100, 0, self.width(), self.height()))
 
     # @QtCore.Slot()
     @QtCore.pyqtSlot()
