@@ -39,8 +39,8 @@ class NotificationsWidget(QtGui.QWidget):
         # Show the target widget.
         self.show()
 
-    def display_notification(self, message, duration=None, style='primary', fade_in=False, fade_out=False,
-                             fade_in_duration=None, fade_out_duration=None):
+    def display_notification(self, message, duration=None, style='primary', fade_in=False, fade_out=False):
+        # fade_in_duration=None, fade_out_duration=None
         """
         Show a styled notification for the duration given to the function.
 
@@ -49,15 +49,13 @@ class NotificationsWidget(QtGui.QWidget):
         :param style:
         :param fade_in:
         :param fade_out:
-        :param fade_in_duration:
-        :param fade_out_duration:
         """
         # Handle effects for this notification.
-        # if fade_in is True:
-        #     self.__notifications_area.setEntryEffect('fadeIn', fade_in_duration)
+        if fade_in is True:
+            self.__notifications_area.setEntryEffect('fadeIn', duration=2000)
 
-        # if fade_out is True:
-        #     self.__notifications_area.setExitEffect('fadeOut', fade_out_duration)
+        if fade_out is True:
+            self.__notifications_area.setExitEffect('fadeOut', duration=2000)
 
         self.__notifications_area.display(message, style, duration)
 
@@ -69,7 +67,7 @@ app = QtGui.QApplication(sys.argv)
 target_widget = NotificationsWidget()
 
 # Display a notification stating "Hey!" which has the style of "success" and lasts for 5 seconds.
-target_widget.display_notification('Hey!', style='space-grey')
+target_widget.display_notification('Hey!', style='space-grey', fade_in=True, fade_out=True)
 
 # Make sure script exits as soon as the application does.
 sys.exit(app.exec_())
